@@ -1,28 +1,86 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+    <Header />
+    <Loading v-if="isLoading"/>
+    <Gallery else :media="media"/>
   </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import Loading from "./components/Loading.vue";
+import Header from "./components/Header.vue";
+import Gallery from "./components/Gallery.vue";
 
 export default {
-  name: 'App',
+  name: "App",
   components: {
-    HelloWorld
+    Loading,
+    Header,
+    Gallery
+  },
+  data() {
+    return {
+      media: [],
+      isLoading: true,
+    };
+  },
+  mounted() {
+    //TODO catch errors
+    fetch(`https://api.nasa.gov/planetary/apod?api_key=${process.env.VUE_APP_API_KEY}&count=50`)
+      .then(res => res.json())
+      .then(dataJson => {
+        let data = dataJson;
+        data.forEach((media) => {
+          if (media.url.search(/https:/i) === -1) {
+            media.url = "https:" + media.url;
+          }
+          if (media.explanation.indexOf("digg") != -1) {
+            media.explanation = media.explanation.substring(0, media.explanation.indexOf("digg"));
+          }
+        });
+        this.media.push(...data);
+        this.isLoading = false;
+      })
   }
-}
+};
 </script>
 
 <style>
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: monospace;
+}
+
+body {
+  min-height: 100vh;
+  color: white;
+  background-image: url("./assets/starfield-banner.jpg");
+  background-repeat: repeat;
+  background-size: contain;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background-color: rgb(15, 14, 27);
+  border: 1px solid #000;
+}
+
+::-webkit-scrollbar-thumb {
+  border-radius: 5px;
+  background-color: #fff;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: #fff;
+}
+
 #app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  min-height: 100vh;
   text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
 }
 </style>
