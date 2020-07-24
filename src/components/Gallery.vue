@@ -5,6 +5,8 @@
         <div class="flipInner">       
           <div id="video" v-if="img.media_type === 'video'" class="flipFront">
             <iframe
+              width="100%"
+              height="250px"
               :src=img.url
               frameborder="0" 
               allowfullscreen>
@@ -63,11 +65,6 @@ export default {
 #video {
   grid-column: span 1;
   grid-row: span 1;
-}
-
-iframe {
-  width: 100%;
-  height: 250px; 
 }
 
 article a {
