@@ -1,5 +1,5 @@
 # apod-gallery
-Want to see some cool pictures courtesy of the Astronomy Picture Of The Day? Click on the link down below!
+Want to see some cool pictures courtesy of the Astronomy Picture Of The Day? Click on the link!
 https://apod-gallery.vercel.app/
 
 ## Project setup
