@@ -1,7 +1,8 @@
 <template>
   <div id="app">
     <Header />
-    <Loading v-if="isLoading"/>
+    <Loading v-if="isLoading && !error"/>
+    <Error v-show="error"/>
     <Gallery else :media="media"/>
   </div>
 </template>
@@ -10,11 +11,13 @@
 import Loading from "./components/Loading.vue";
 import Header from "./components/Header.vue";
 import Gallery from "./components/Gallery.vue";
+import Error from "./components/Error.vue";
 
 export default {
   name: "App",
   components: {
     Loading,
+    Error,
     Header,
     Gallery
   },
@@ -22,16 +25,21 @@ export default {
     return {
       media: [],
       isLoading: true,
+      error: null
     };
   },
   mounted() {
-    //TODO catch errors
     fetch(`https://api.nasa.gov/planetary/apod?api_key=${process.env.VUE_APP_API_KEY}&count=50`)
-      .then(res => res.json())
+      .then(res => {
+        if(!res.ok) {
+          throw Error(res.statusText)
+        }
+        return res.json()
+      })
       .then(dataJson => {
         let data = dataJson;
         data.forEach((media) => {
-          if (media.url.search(/https:/i) === -1) {
+          if (media.url.search(/http/i) === -1) {
             media.url = "https:" + media.url;
           }
           if (media.explanation.indexOf("digg") != -1) {
@@ -41,6 +49,7 @@ export default {
         this.media.push(...data);
         this.isLoading = false;
       })
+      .catch(error => this.error = error)
   }
 };
 </script>

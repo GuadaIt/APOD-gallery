@@ -3,7 +3,7 @@
       <article v-for="(img, index) in media" :key="index" class="flipCard" :class=getId(index) :id=img.media_type>
 
         <div class="flipInner">       
-          <div id="video" v-if="img.media_type === 'video'" class="flipFront">
+          <div id="video" v-if="img.media_type === 'video' && img.url" class="flipFront">
             <iframe
               width="100%"
               height="250px"
