@@ -134,6 +134,10 @@ section > article:nth-child(5n) {
   overflow: hidden;
 }
 
+.explanation-container p {
+  font-size: 15px;
+}
+
 .explanation-container:hover {
   overflow-y: auto;
 }
